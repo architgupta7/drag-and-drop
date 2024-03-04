@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Order Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #f3f3f3;
+    }
+    #container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      font-size: 40px;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #007bff;
+      position: relative;
+      cursor: pointer;
+    }
+    h1 span {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+    h1:hover span {
+      transform: translateY(-10px);
+    }
+    #sentence {
+      
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: #555;
+    }
+    #sentenceText{
+      font-size: 35px;
+    }
+    #sortable {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #sortable .word {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      margin: 0 5px;
+      cursor: pointer;
+      background-color: #fff;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    #sortable .word:hover {
+      background-color: #f0f0f0;
+    }
+    .input-box {
+      border: 2px dashed #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    button {
+      display: inline-block;
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <h1><span>Word Order Game</span> </h1>
+
+  <div id="sentence">
+    <p id="sentenceText">I am developer</p>
+  </div>
+
+  <div id="sortable" class="sentence">
+    <span class="word" draggable="true" ondragstart="drag(event)">I</span>
+    <span class="word" draggable="true" ondragstart="drag(event)">am</span>
+    <span class="word" draggable="true" ondragstart="drag(event)">developer</span>
+  </div>
+
+  <div id="inputBoxes">
+    <div class="input-box" droppable="true" ondrop="drop(event, 0)" ondragover="allowDrop(event)"></div>
+    <div class="input-box" droppable="true" ondrop="drop(event, 1)" ondragover="allowDrop(event)"></div>
+    <div class="input-box" droppable="true" ondrop="drop(event, 2)" ondragover="allowDrop(event)"></div>
+  </div>
+
+  <div class="button-container">
+    <button onclick="checkOrder()">Check Order</button>
+    <button onclick="resetGame()">Reset</button>
+  </div>
+</div>
+
+<script>
+  function allowDrop(event) {
+    event.preventDefault();
+  }
+  
+  function drag(event) {
+    event.dataTransfer.setData("text", event.target.innerText);
+  }
+  
+  function drop(event, inputIndex) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("text");
+    var word = data;
+
+    // Clear the existing content in the input box
+    event.target.innerText = '';
+
+    // Append the dropped word to the input box
+    event.target.innerText = word;
+
+    // Find the index of the dropped word in the spanElements array
+    var spanElements = document.querySelectorAll('.word');
+    var droppedIndex = Array.from(spanElements).findIndex(element => element.innerText === word);
+
+    // Hide the corresponding span element
+    spanElements[droppedIndex].style.display = 'none';
+  }
+
+  function checkOrder() {
+    var inputBoxes = document.querySelectorAll('.input-box');
+    var sentenceText = document.getElementById('sentenceText').innerText;
+    var sentenceWords = sentenceText.split(' ');
+    var input = Array.from(inputBoxes).map(box => box.innerText.trim());
+    
+    if (sentenceWords.join(' ') === input.join(' ')) {
+      alert('True');
+    } else {
+      alert('False');
+    }
+  }
+
+  function resetGame() {
+    var inputBoxes = document.querySelectorAll('.input-box');
+    var spanElements = document.querySelectorAll('.word');
+
+    inputBoxes.forEach(box => {
+      box.innerText = '';
+    });
+
+    spanElements.forEach(span => {
+      span.style.display = 'inline-block';
+    });
+  }
+</script>
+  
+</body>
+</html>
+\
